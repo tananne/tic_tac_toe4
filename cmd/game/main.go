@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	g := game.NewBoard()
-	g.Display()
+	g := game.NewGame()
+	g.Board.Display()
 }
