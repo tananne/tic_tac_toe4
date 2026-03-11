@@ -17,3 +17,11 @@ type Line struct {
 	Type  LineType
 	Index int
 }
+
+type Mark rune
+
+const (
+	X     Mark = 'X'
+	O     Mark = 'O'
+	Empty Mark = ' '
+)

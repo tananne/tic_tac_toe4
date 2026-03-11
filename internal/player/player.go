@@ -6,8 +6,8 @@ import (
 )
 
 type Player interface {
-	ChooseLine() (model.Line, error)
-	MakeMove(board *board.Board, allowedLine model.Line) (model.Move, error)
-	GetMark() rune
+	ChooseLine(gameBoard *board.Board) (model.Line, error)
+	MakeMove(gameBoard *board.Board, allowedLine model.Line) (model.Move, error)
+	GetMark() model.Mark
 	GetName() string
 }
