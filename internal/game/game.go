@@ -1,57 +1,36 @@
 package game
 
 import (
-	//"fmt"
-
 	"tic-tac-toe/internal/board"
 	"tic-tac-toe/internal/model"
 	"tic-tac-toe/internal/player"
-	//"tic-tac-toe/internal/rules"
 )
-
-type GameState struct {
-	Board         *board.Board
-	CurrentPlayer model.Mark
-	AllowedLine   model.Line
-	Turn          int
-	GameOver      bool
-	Winner        model.Mark
-}
 
 type Game struct {
 	State *GameState
 
-	PlayerX player.Player
-	PlayerO player.Player
+	players [2]player.Player
 }
 
-func NewGame(p1, p2 player.Player) *Game {
+func NewGame(p1, p2 player.Player, size int) *Game {
 	gameState := &GameState{
-		Board:         board.NewBoard(),
-		CurrentPlayer: model.X,
+		Board:         board.NewBoard(size),
+		CurrentPlayer: 1,
+		Constraint:    model.Line{},
 		Turn:          0,
 		GameOver:      false,
-		Winner:        model.Empty,
+		Winner:        board.Empty,
 	}
 	return &Game{
 		State:   gameState,
-		PlayerX: p1,
-		PlayerO: p2,
+		players: [2]player.Player{p1, p2},
 	}
 }
 
 func (g *Game) switchPlayer() {
-	if g.State.CurrentPlayer == model.X {
-		g.State.CurrentPlayer = model.O
-	} else {
-		g.State.CurrentPlayer = model.X
-	}
+	g.State.CurrentPlayer = (g.State.CurrentPlayer + 1) % 2
 }
 
-// func (g *Game) applyAllowedLine(line model.Line) error {
-// 	if rules.IsMoveAllowed(g.Board, line) {
-// 		g.allowedLine = line
-// 		return nil
-// 	}
-// 	return fmt.Errorf("В данной линии нет свободных ячеек. Выберите другую линию.")
-// }
+func (g *Game) updateTurn() {
+	g.State.Turn++
+}

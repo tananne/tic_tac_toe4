@@ -1,79 +1,33 @@
 package board
 
-import (
-	"fmt"
-	"tic-tac-toe/internal/model"
-)
-
-const BoardSize = 4
+import "fmt"
 
 type Board struct {
-	Grid [BoardSize][BoardSize]model.Mark
+	Size  int
+	Cells [][]Cell
 }
 
-func NewBoard() *Board {
-	grid := [BoardSize][BoardSize]model.Mark{}
-	for i := 0; i < BoardSize; i++ {
-		for j := 0; j < BoardSize; j++ {
-			grid[i][j] = model.Empty
-		}
+func NewBoard(size int) *Board {
+	cells := make([][]Cell, size)
+	for i := range cells {
+		cells[i] = make([]Cell, size)
 	}
-	return &Board{Grid: grid}
-}
 
-func (b *Board) Display() {
-	for i := 0; i <= BoardSize; i++ {
-		for j := 0; j <= BoardSize; j++ {
-			switch {
-			case i == 0 && j == 0:
-				fmt.Print(" ")
-			case i == 0:
-				fmt.Print(j)
-			case j == 0:
-				fmt.Print(i)
-			case b.Grid[i-1][j-1] == model.X:
-				fmt.Print(string(model.X))
-			case b.Grid[i-1][j-1] == model.O:
-				fmt.Print(string(model.O))
-			default:
-				fmt.Print("_")
-			}
-
-			if j < BoardSize {
-				fmt.Print(" ")
-			}
-		}
-		fmt.Println()
+	return &Board{
+		Size:  size,
+		Cells: cells,
 	}
 }
 
-func (b *Board) IsEmptyCell(row, col int) bool {
-	return b.Grid[row][col] == model.Empty
+func (b *Board) IsEmpty(row, col int) bool {
+	return b.Cells[row][col] == Empty
 }
 
-func (b *Board) LineHasEmptyCells(line model.Line) bool {
-	switch line.Type {
-	case model.Row:
-		for col := 0; col < BoardSize; col++ {
-			if b.IsEmptyCell(line.Index, col) {
-				return true
-			}
-		}
-	case model.Column:
-		for row := 0; row < BoardSize; row++ {
-			if b.IsEmptyCell(row, line.Index) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func (b *Board) PlaceMark(move model.Move, mark model.Mark) (bool, error) {
-	if b.IsEmptyCell(move.Row, move.Col) {
-		b.Grid[move.Row][move.Col] = mark
-		return true, nil
+func (b *Board) Place(row, col int, cell Cell) error {
+	if b.IsEmpty(row, col) {
+		b.Cells[row][col] = cell
+		return nil
 	}
 
-	return false, fmt.Errorf("Данная ячейка уже занята")
+	return fmt.Errorf("Данная ячейка уже занята")
 }
